@@ -9,21 +9,59 @@
 /* Begin PBXBuildFile section */
 		114FA9EE2C516DCF002B688A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114FA9ED2C516DCF002B688A /* AppDelegate.swift */; };
 		114FA9F02C516DCF002B688A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114FA9EF2C516DCF002B688A /* SceneDelegate.swift */; };
-		114FA9F22C516DCF002B688A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114FA9F12C516DCF002B688A /* ViewController.swift */; };
-		114FA9F52C516DCF002B688A /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 114FA9F42C516DCF002B688A /* Base */; };
 		114FA9F72C516DD2002B688A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 114FA9F62C516DD2002B688A /* Assets.xcassets */; };
 		114FA9FA2C516DD2002B688A /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 114FA9F92C516DD2002B688A /* Base */; };
+		114FAA022C5171CC002B688A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114FAA012C5171CC002B688A /* LoginViewController.swift */; };
+		114FAA042C5171E4002B688A /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114FAA032C5171E4002B688A /* TabBarController.swift */; };
+		114FAA062C5171F6002B688A /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114FAA052C5171F6002B688A /* FeedViewController.swift */; };
+		114FAA082C517203002B688A /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114FAA072C517203002B688A /* FilterViewController.swift */; };
+		114FAA0A2C51720C002B688A /* SortViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114FAA092C51720C002B688A /* SortViewController.swift */; };
+		114FAA0C2C517221002B688A /* ShowDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114FAA0B2C517221002B688A /* ShowDetailsViewController.swift */; };
+		114FAA0E2C517234002B688A /* ShowPictureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114FAA0D2C517234002B688A /* ShowPictureViewController.swift */; };
+		114FAA102C51725A002B688A /* AddProductViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114FAA0F2C51725A002B688A /* AddProductViewController.swift */; };
+		114FAA122C517271002B688A /* AddContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114FAA112C517271002B688A /* AddContentViewController.swift */; };
+		114FAA142C51727F002B688A /* UpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114FAA132C51727F002B688A /* UpdateViewController.swift */; };
+		114FAA162C51728E002B688A /* ShowUpdateableDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114FAA152C51728E002B688A /* ShowUpdateableDetailsViewController.swift */; };
+		114FAA182C51729F002B688A /* UpdateContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114FAA172C51729F002B688A /* UpdateContentViewController.swift */; };
+		114FAA1A2C5172B3002B688A /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114FAA192C5172B3002B688A /* SettingsViewController.swift */; };
+		114FAA1C2C5172DD002B688A /* FilteringOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114FAA1B2C5172DD002B688A /* FilteringOptionsViewController.swift */; };
+		114FAA1E2C5172ED002B688A /* PopupViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114FAA1D2C5172ED002B688A /* PopupViewControllerDelegate.swift */; };
+		114FAA212C517309002B688A /* CustomTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 114FAA202C517309002B688A /* CustomTableViewCell.xib */; };
+		114FAA222C517309002B688A /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114FAA1F2C517309002B688A /* CustomTableViewCell.swift */; };
+		114FAA242C5173DC002B688A /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114FAA232C5173DC002B688A /* DataManager.swift */; };
+		114FAA262C517688002B688A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 114FAA252C517686002B688A /* GoogleService-Info.plist */; };
+		B599C2AF49C649C7BDAFF7E1 /* Pods_FindikBaby.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C067482057A708C4B5342C95 /* Pods_FindikBaby.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		114FA9EA2C516DCF002B688A /* FindikBaby.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FindikBaby.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		114FA9ED2C516DCF002B688A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		114FA9EF2C516DCF002B688A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		114FA9F12C516DCF002B688A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		114FA9F42C516DCF002B688A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		114FA9F62C516DD2002B688A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		114FA9F92C516DD2002B688A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		114FA9FB2C516DD2002B688A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		114FAA012C5171CC002B688A /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		114FAA032C5171E4002B688A /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		114FAA052C5171F6002B688A /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
+		114FAA072C517203002B688A /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
+		114FAA092C51720C002B688A /* SortViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortViewController.swift; sourceTree = "<group>"; };
+		114FAA0B2C517221002B688A /* ShowDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowDetailsViewController.swift; sourceTree = "<group>"; };
+		114FAA0D2C517234002B688A /* ShowPictureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowPictureViewController.swift; sourceTree = "<group>"; };
+		114FAA0F2C51725A002B688A /* AddProductViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProductViewController.swift; sourceTree = "<group>"; };
+		114FAA112C517271002B688A /* AddContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddContentViewController.swift; sourceTree = "<group>"; };
+		114FAA132C51727F002B688A /* UpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateViewController.swift; sourceTree = "<group>"; };
+		114FAA152C51728E002B688A /* ShowUpdateableDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowUpdateableDetailsViewController.swift; sourceTree = "<group>"; };
+		114FAA172C51729F002B688A /* UpdateContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateContentViewController.swift; sourceTree = "<group>"; };
+		114FAA192C5172B3002B688A /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		114FAA1B2C5172DD002B688A /* FilteringOptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteringOptionsViewController.swift; sourceTree = "<group>"; };
+		114FAA1D2C5172ED002B688A /* PopupViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupViewControllerDelegate.swift; sourceTree = "<group>"; };
+		114FAA1F2C517309002B688A /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
+		114FAA202C517309002B688A /* CustomTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomTableViewCell.xib; sourceTree = "<group>"; };
+		114FAA232C5173DC002B688A /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		114FAA252C517686002B688A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		925CACA6A6263E06CC00551B /* Pods-FindikBaby.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FindikBaby.debug.xcconfig"; path = "Target Support Files/Pods-FindikBaby/Pods-FindikBaby.debug.xcconfig"; sourceTree = "<group>"; };
+		C067482057A708C4B5342C95 /* Pods_FindikBaby.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FindikBaby.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFA07C83EB7724EBCA15E84C /* Pods-FindikBaby.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FindikBaby.release.xcconfig"; path = "Target Support Files/Pods-FindikBaby/Pods-FindikBaby.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B599C2AF49C649C7BDAFF7E1 /* Pods_FindikBaby.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +81,8 @@
 			children = (
 				114FA9EC2C516DCF002B688A /* FindikBaby */,
 				114FA9EB2C516DCF002B688A /* Products */,
+				3898507BD1BCB16ACD5B8F72 /* Pods */,
+				E478DAA68FAFFBDCF15C8754 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -56,15 +97,49 @@
 		114FA9EC2C516DCF002B688A /* FindikBaby */ = {
 			isa = PBXGroup;
 			children = (
+				114FAA252C517686002B688A /* GoogleService-Info.plist */,
 				114FA9ED2C516DCF002B688A /* AppDelegate.swift */,
 				114FA9EF2C516DCF002B688A /* SceneDelegate.swift */,
-				114FA9F12C516DCF002B688A /* ViewController.swift */,
-				114FA9F32C516DCF002B688A /* Main.storyboard */,
 				114FA9F62C516DD2002B688A /* Assets.xcassets */,
 				114FA9F82C516DD2002B688A /* LaunchScreen.storyboard */,
 				114FA9FB2C516DD2002B688A /* Info.plist */,
+				114FAA012C5171CC002B688A /* LoginViewController.swift */,
+				114FAA032C5171E4002B688A /* TabBarController.swift */,
+				114FAA052C5171F6002B688A /* FeedViewController.swift */,
+				114FAA072C517203002B688A /* FilterViewController.swift */,
+				114FAA092C51720C002B688A /* SortViewController.swift */,
+				114FAA0B2C517221002B688A /* ShowDetailsViewController.swift */,
+				114FAA0D2C517234002B688A /* ShowPictureViewController.swift */,
+				114FAA0F2C51725A002B688A /* AddProductViewController.swift */,
+				114FAA112C517271002B688A /* AddContentViewController.swift */,
+				114FAA132C51727F002B688A /* UpdateViewController.swift */,
+				114FAA152C51728E002B688A /* ShowUpdateableDetailsViewController.swift */,
+				114FAA172C51729F002B688A /* UpdateContentViewController.swift */,
+				114FAA192C5172B3002B688A /* SettingsViewController.swift */,
+				114FAA1B2C5172DD002B688A /* FilteringOptionsViewController.swift */,
+				114FAA1D2C5172ED002B688A /* PopupViewControllerDelegate.swift */,
+				114FAA1F2C517309002B688A /* CustomTableViewCell.swift */,
+				114FAA202C517309002B688A /* CustomTableViewCell.xib */,
+				114FAA232C5173DC002B688A /* DataManager.swift */,
 			);
 			path = FindikBaby;
+			sourceTree = "<group>";
+		};
+		3898507BD1BCB16ACD5B8F72 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				925CACA6A6263E06CC00551B /* Pods-FindikBaby.debug.xcconfig */,
+				DFA07C83EB7724EBCA15E84C /* Pods-FindikBaby.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		E478DAA68FAFFBDCF15C8754 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C067482057A708C4B5342C95 /* Pods_FindikBaby.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -74,9 +149,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 114FA9FE2C516DD2002B688A /* Build configuration list for PBXNativeTarget "FindikBaby" */;
 			buildPhases = (
+				9D23687BD7203B0459227A31 /* [CP] Check Pods Manifest.lock */,
 				114FA9E62C516DCF002B688A /* Sources */,
 				114FA9E72C516DCF002B688A /* Frameworks */,
 				114FA9E82C516DCF002B688A /* Resources */,
+				1284DC387AF85D687C41036A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -126,35 +203,86 @@
 			buildActionMask = 2147483647;
 			files = (
 				114FA9F72C516DD2002B688A /* Assets.xcassets in Resources */,
+				114FAA262C517688002B688A /* GoogleService-Info.plist in Resources */,
 				114FA9FA2C516DD2002B688A /* Base in Resources */,
-				114FA9F52C516DCF002B688A /* Base in Resources */,
+				114FAA212C517309002B688A /* CustomTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1284DC387AF85D687C41036A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FindikBaby/Pods-FindikBaby-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FindikBaby/Pods-FindikBaby-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FindikBaby/Pods-FindikBaby-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9D23687BD7203B0459227A31 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FindikBaby-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		114FA9E62C516DCF002B688A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				114FA9F22C516DCF002B688A /* ViewController.swift in Sources */,
+				114FAA222C517309002B688A /* CustomTableViewCell.swift in Sources */,
+				114FAA0C2C517221002B688A /* ShowDetailsViewController.swift in Sources */,
+				114FAA162C51728E002B688A /* ShowUpdateableDetailsViewController.swift in Sources */,
+				114FAA082C517203002B688A /* FilterViewController.swift in Sources */,
+				114FAA102C51725A002B688A /* AddProductViewController.swift in Sources */,
+				114FAA122C517271002B688A /* AddContentViewController.swift in Sources */,
+				114FAA022C5171CC002B688A /* LoginViewController.swift in Sources */,
+				114FAA042C5171E4002B688A /* TabBarController.swift in Sources */,
+				114FAA062C5171F6002B688A /* FeedViewController.swift in Sources */,
+				114FAA1E2C5172ED002B688A /* PopupViewControllerDelegate.swift in Sources */,
+				114FAA1A2C5172B3002B688A /* SettingsViewController.swift in Sources */,
+				114FAA0A2C51720C002B688A /* SortViewController.swift in Sources */,
 				114FA9EE2C516DCF002B688A /* AppDelegate.swift in Sources */,
+				114FAA0E2C517234002B688A /* ShowPictureViewController.swift in Sources */,
+				114FAA242C5173DC002B688A /* DataManager.swift in Sources */,
+				114FAA182C51729F002B688A /* UpdateContentViewController.swift in Sources */,
 				114FA9F02C516DCF002B688A /* SceneDelegate.swift in Sources */,
+				114FAA1C2C5172DD002B688A /* FilteringOptionsViewController.swift in Sources */,
+				114FAA142C51727F002B688A /* UpdateViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		114FA9F32C516DCF002B688A /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				114FA9F42C516DCF002B688A /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		114FA9F82C516DD2002B688A /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -203,7 +331,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -266,7 +394,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -287,6 +415,7 @@
 		};
 		114FA9FF2C516DD2002B688A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 925CACA6A6263E06CC00551B /* Pods-FindikBaby.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -297,9 +426,7 @@
 				INFOPLIST_FILE = FindikBaby/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -315,6 +442,7 @@
 		};
 		114FAA002C516DD2002B688A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DFA07C83EB7724EBCA15E84C /* Pods-FindikBaby.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -325,9 +453,7 @@
 				INFOPLIST_FILE = FindikBaby/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

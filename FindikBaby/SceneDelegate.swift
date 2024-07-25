@@ -1,11 +1,12 @@
 //
 //  SceneDelegate.swift
-//  FindikBaby
+//  FindikBabyApp
 //
-//  Created by Rüstem Ali Niyaz on 24.07.2024.
+//  Created by Rüstem Ali Niyaz on 30.05.2024.
 //
 
 import UIKit
+import FirebaseAuth
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -13,10 +14,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        
+        
+        
+        let currentUser = Auth.auth().currentUser
+        
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        
+        let window = UIWindow(windowScene: windowScene)
+        window.overrideUserInterfaceStyle = .light
+        window.makeKeyAndVisible()
+        window.rootViewController = UINavigationController(rootViewController: LoginViewController())
+        self.window = window
+        if currentUser != nil {
+            print("LOGGED IN!!! LOGGED IN !!! LOGGED IN!!! LOGGED IN !!! LOGGED IN!!! LOGGED IN !!! LOGGED IN!!! LOGGED IN !!! LOGGED IN!!! LOGGED IN !!! LOGGED IN!!! LOGGED IN !!!")
+
+            window.rootViewController = UINavigationController(rootViewController: TabBarController())
+        }
+        
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

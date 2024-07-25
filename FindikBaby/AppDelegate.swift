@@ -1,19 +1,27 @@
 //
 //  AppDelegate.swift
-//  FindikBaby
+//  FindikBabyApp
 //
-//  Created by Rüstem Ali Niyaz on 24.07.2024.
+//  Created by Rüstem Ali Niyaz on 30.05.2024.
 //
 
 import UIKit
+import FirebaseCore
+import FirebaseFirestore
+import FirebaseAuth
+import FirebaseAnalytics
+import FirebaseStorage
+import IQKeyboardManagerSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        window?.overrideUserInterfaceStyle = .light
+        IQKeyboardManager.shared.enable = true
+        FirebaseApp.configure()
         return true
     }
 
