@@ -107,6 +107,8 @@
 				114FAA032C5171E4002B688A /* TabBarController.swift */,
 				114FAA052C5171F6002B688A /* FeedViewController.swift */,
 				114FAA072C517203002B688A /* FilterViewController.swift */,
+				114FAA1B2C5172DD002B688A /* FilteringOptionsViewController.swift */,
+				114FAA232C5173DC002B688A /* DataManager.swift */,
 				114FAA092C51720C002B688A /* SortViewController.swift */,
 				114FAA0B2C517221002B688A /* ShowDetailsViewController.swift */,
 				114FAA0D2C517234002B688A /* ShowPictureViewController.swift */,
@@ -116,11 +118,9 @@
 				114FAA152C51728E002B688A /* ShowUpdateableDetailsViewController.swift */,
 				114FAA172C51729F002B688A /* UpdateContentViewController.swift */,
 				114FAA192C5172B3002B688A /* SettingsViewController.swift */,
-				114FAA1B2C5172DD002B688A /* FilteringOptionsViewController.swift */,
 				114FAA1D2C5172ED002B688A /* PopupViewControllerDelegate.swift */,
 				114FAA1F2C517309002B688A /* CustomTableViewCell.swift */,
 				114FAA202C517309002B688A /* CustomTableViewCell.xib */,
-				114FAA232C5173DC002B688A /* DataManager.swift */,
 			);
 			path = FindikBaby;
 			sourceTree = "<group>";

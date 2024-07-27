@@ -1,9 +1,4 @@
-//
-//  dataManager.swift
-//  FindikBabyApp
-//
-//  Created by Rüstem Ali Niyaz on 2.06.2024.
-//
+
 
 import Foundation
 import FirebaseStorage
@@ -32,6 +27,7 @@ struct DataManager {
     static func saveKeywordValue(for option: String, keyword: String) {
         keywordValues[option] = keyword
     }
+    
 }
 
 

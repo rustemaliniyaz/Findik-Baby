@@ -1,9 +1,3 @@
-//
-//  TabBarController.swift
-//  FindikBabyApp
-//
-//  Created by Rüstem Ali Niyaz on 1.06.2024.
-//
 
 import UIKit
 

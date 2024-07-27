@@ -1,9 +1,3 @@
-//
-//  SceneDelegate.swift
-//  FindikBabyApp
-//
-//  Created by Rüstem Ali Niyaz on 30.05.2024.
-//
 
 import UIKit
 import FirebaseAuth

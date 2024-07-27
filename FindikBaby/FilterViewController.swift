@@ -74,7 +74,7 @@ class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func presentFilteringOptions(withPhotoOptions hasPhotoOptions: Bool, pickerViewOptions hasPickerViewOptions: Bool, textFieldsOptions hasTextFieldsOptions: Bool, keywordTextFieldOptions: Bool) {
         let filteringOptionsVC = FilteringOptionsViewController()
-        filteringOptionsVC.delegate = self // Ensure this is correctly set
+        filteringOptionsVC.delegate = self
         
         filteringOptionsVC.hasPhotoOptions = hasPhotoOptions
         filteringOptionsVC.hasPickerViewOptions = hasPickerViewOptions
@@ -84,6 +84,7 @@ class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDa
         filteringOptionsVC.modalPresentationStyle = .overCurrentContext
         present(filteringOptionsVC, animated: false, completion: nil)
     }
+
     
     @objc private func cancelButtonTapped() {
         delegate?.dismissPopup()
@@ -98,9 +99,9 @@ class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDa
             let cell = tableView.cellForRow(at: indexPath)
             cell?.accessoryType = .checkmark
             
-            // Check if filter values exist in DataManager and use them
+            
             if let (filter1, filter2) = DataManager.filterValues[filterOption] {
-                // Use filter1 and filter2 as needed
+                
                 print("Filter1 for \(filterOption): \(filter1)")
                 print("Filter2 for \(filterOption): \(filter2)")
             }
@@ -144,7 +145,16 @@ class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
 extension FilterViewController: FilteringOptionsDelegate {
     func applyFilters(filter1: String, filter2: String, keyword: String) {
-
-        dismiss(animated: true, completion: nil)
-    }
+            if let selectedFilterOption = selectedFilterOption {
+                if let index = filterOptions.firstIndex(of: selectedFilterOption) {
+                    let indexPath = IndexPath(row: index, section: 0)
+                    if let cell = tableView.cellForRow(at: indexPath) {
+                        cell.accessoryType = .checkmark
+                    }
+                }
+            }
+            
+            
+            dismiss(animated: true, completion: nil)
+        }
 }

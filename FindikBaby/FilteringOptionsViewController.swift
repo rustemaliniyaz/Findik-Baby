@@ -8,6 +8,8 @@ class FilteringOptionsViewController: UIViewController {
 
     weak var delegate: FilteringOptionsDelegate?
     var filterValues: [String: (filter1: String, filter2: String)] = [:]
+    
+    private var selectedDate: String?
     private let filter1TextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "En çok"
@@ -254,18 +256,53 @@ class FilteringOptionsViewController: UIViewController {
         let filter1 = filter1TextField.text ?? ""
         let filter2 = filter2TextField.text ?? ""
         let keyword = keywordTextField.text ?? ""
-        // Save filter values using DataManager
+        
         if let selectedOption = (delegate as? FilterViewController)?.selectedFilterOption {
-            DataManager.saveFilterValues(for: selectedOption, filter1: filter1, filter2: filter2)
+            if hasKeywordTextFieldOptions {
+                let keywordKey = "\(selectedOption)Filter"
+                    DataManager.keywordValues[keywordKey] = keyword
+                } else if hasPhotoOptions {
+                    let photoKey = "\(selectedOption)Filter"
+                    if radioButton1.isSelected {
+                        DataManager.keywordValues[photoKey] = "Var"
+                    } else if radioButton2.isSelected {
+                        DataManager.keywordValues[photoKey] = "Yok"
+                    }
+                } else if hasPickerViewOptions {
+                    let dateKey = "\(selectedOption)Filter"
+                    DataManager.keywordValues[dateKey] = selectedDate
+                } else {
+                    let filter1Key = "\(selectedOption)1Filter"
+                    let filter2Key = "\(selectedOption)2Filter"
+                    DataManager.keywordValues[filter1Key] = filter1
+                    DataManager.keywordValues[filter2Key] = filter2
+                }
         }
         
         delegate?.applyFilters(filter1: filter1, filter2: filter2, keyword: keyword)
-        print(DataManager.filterValues)
+        print(DataManager.keywordValues)
         dismiss(animated: true, completion: nil)
     }
 
 
 
+    private func formatDate() -> String {
+            let calendar = Calendar.current
+            let dateFormatter = DateFormatter()
+            switch segmentedControl.selectedSegmentIndex {
+            case 0:
+                dateFormatter.dateFormat = "d.M.yyyy"
+            case 1:
+                dateFormatter.dateFormat = "M.yyyy"
+            case 2:
+                dateFormatter.dateFormat = "yyyy"
+            default:
+                return ""
+            }
+            let dateComponents = DateComponents(year: selectedYear, month: selectedMonth, day: selectedDay)
+            let date = calendar.date(from: dateComponents)
+            return dateFormatter.string(from: date ?? Date())
+        }
 
     @objc func segmentedControlChanged(_ sender: UISegmentedControl) {
         pickerView.reloadAllComponents()
@@ -276,13 +313,14 @@ class FilteringOptionsViewController: UIViewController {
 }
 
 extension FilteringOptionsViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         switch segmentedControl.selectedSegmentIndex {
-        case 0: // Date
+        case 0:
             return 3
-        case 1: // Month/Year
+        case 1:
             return 2
-        case 2: // Year
+        case 2:
             return 1
         default:
             return 0
@@ -291,28 +329,28 @@ extension FilteringOptionsViewController: UIPickerViewDelegate, UIPickerViewData
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         switch segmentedControl.selectedSegmentIndex {
-        case 0: // Date
+        case 0:
             switch component {
             case 0:
-                return 31 // Days
+                return 31
             case 1:
-                return 12 // Months
+                return 12
             case 2:
-                return endYear - startYear + 1 // Years from 2010 to 2030
+                return endYear - startYear + 1
             default:
                 return 0
             }
-        case 1: // Month/Year
+        case 1:
             switch component {
             case 0:
-                return 12 // Months
+                return 12
             case 1:
-                return endYear - startYear + 1 // Years from 2010 to 2030
+                return endYear - startYear + 1
             default:
                 return 0
             }
-        case 2: // Year
-            return endYear - startYear + 1 // Years from 2010 to 2030
+        case 2:
+            return endYear - startYear + 1
         default:
             return 0
         }
@@ -320,30 +358,57 @@ extension FilteringOptionsViewController: UIPickerViewDelegate, UIPickerViewData
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         switch segmentedControl.selectedSegmentIndex {
-        case 0: // Date
+        case 0:
             switch component {
             case 0:
-                return "\(row + 1)" // Days
+                return "\(row + 1)"
             case 1:
-                return "\(row + 1)" // Months
+                return "\(row + 1)"
             case 2:
-                return "\(startYear + row)" // Years from 2010 to 2030
+                return "\(startYear + row)"
             default:
                 return nil
             }
-        case 1: // Month/Year
+        case 1:
             switch component {
             case 0:
-                return "\(row + 1)" // Months
+                return "\(row + 1)"
             case 1:
-                return "\(startYear + row)" // Years from 2010 to 2030
+                return "\(startYear + row)"
             default:
                 return nil
             }
-        case 2: // Year
-            return "\(startYear + row)" // Years from 2010 to 2030
+        case 2:
+            return "\(startYear + row)"
         default:
             return nil
         }
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        switch segmentedControl.selectedSegmentIndex {
+        case 0:
+            if component == 0 {
+                selectedDay = row + 1
+            } else if component == 1 {
+                selectedMonth = row + 1
+            } else if component == 2 {
+                selectedYear = startYear + row
+            }
+        case 1:
+            if component == 0 {
+                selectedMonth = row + 1
+            } else if component == 1 {
+                selectedYear = startYear + row
+            }
+        case 2:
+            if component == 0 {
+                selectedYear = startYear + row
+            }
+        default:
+            break
+        }
+        
+        selectedDate = formatDate()
     }
 }
