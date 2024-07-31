@@ -4,7 +4,7 @@ import FirebaseCore
 import FirebaseFirestore
 
 protocol UpdateContentViewControllerDelegate: AnyObject {
-    func updateContentViewControllerDidSave(text: String, forMessageText messageText: String)
+    func updateContentViewControllerDidSave(text: Any, forMessageText messageText: String)
 }
 
 class UpdateContentViewController: UIViewController, UITextFieldDelegate {
@@ -24,7 +24,13 @@ class UpdateContentViewController: UIViewController, UITextFieldDelegate {
         if label.text == "Ürün Fotoğrafı" { label.isHidden = true }
         return label
     }()
-    
+    private let datePicker: UIDatePicker = {
+        let picker = UIDatePicker()
+        picker.datePickerMode = .date
+        picker.preferredDatePickerStyle = .wheels
+        picker.backgroundColor = .systemBackground
+        return picker
+    }()
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -36,11 +42,11 @@ class UpdateContentViewController: UIViewController, UITextFieldDelegate {
     private let textField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = .systemGray6
-        textField.attributedPlaceholder = NSAttributedString(string: "Güncelleme giriniz", attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray2])
+        textField.attributedPlaceholder = NSAttributedString(string: "Güncelleme giriniz", attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray])
         textField.layer.cornerRadius = 8
         textField.layer.masksToBounds = true
         textField.layer.borderWidth = 1.0
-        textField.textColor = UITraitCollection.current.userInterfaceStyle == .dark ? .white : .black
+        textField.textColor = UIColor(red: 0.25, green: 0.25, blue: 0.25, alpha: 1.0)
         textField.layer.borderColor = UIColor.systemGray.withAlphaComponent(1.0).cgColor
         textField.textAlignment = .center
         return textField
@@ -82,39 +88,38 @@ class UpdateContentViewController: UIViewController, UITextFieldDelegate {
 
     @objc func saveButtonActionForProductInfo() {
         if label.text == "Ürün Fotoğrafı" {
-            
-                if let data = imageView.image?.jpegData(compressionQuality: 0.5) {
-                    isUploadInProgress = true
-                    updateSaveButtonTitle(isUploading: true)
-                    let filename = UUID().uuidString + ".jpg"
-                    let imageRef = DataManager.imageReference.child(filename)
-                    imageRef.putData(data, metadata: nil) { metadata, error in
-                        if let error = error {
-                            self.makeAlert(titleInput: "Yükleme Hatası", messageInput: "Fotoğraf yüklenirken bir hata oluştu. Tekrar deneyiniz.")
-                            print("Error uploading image: \(error.localizedDescription)")
-                            self.isUploadInProgress = false
-                            self.updateSaveButtonTitle(isUploading: false)
-                        } else {
-                            imageRef.downloadURL { url, error in
-                                if let error = error {
-                                    print("Error retrieving download URL: \(error.localizedDescription)")
-                                } else if let imageURL = url?.absoluteString {
-                                    DataManager.productData[String(self.label.text!)] = imageURL
-                                    print("Uploaded image URL: \(imageURL)")
-                                    self.isUploadInProgress = false
-                                    self.updateSaveButtonTitle(isUploading: false)
-                                    let docRef = self.db.document("Products/\(DataManager.documentName)")
-                                    docRef.updateData(["\(DataManager.messageText)": imageURL]) { error in
-                                        if let error = error {
-                                            print("Error updating document: \(error)")
-                                        } else {
-                                            if let delegate = self.delegate {
-                                                delegate.updateContentViewControllerDidSave(text: imageURL, forMessageText: DataManager.messageText)
-                                            }
-                                            DataManager.productData.removeAll()
-                                            DispatchQueue.main.async {
-                                                self.navigationController?.popViewController(animated: true)
-                                            }
+            // Handle image upload
+            if let data = imageView.image?.jpegData(compressionQuality: 0.5) {
+                isUploadInProgress = true
+                updateSaveButtonTitle(isUploading: true)
+                let filename = UUID().uuidString + ".jpg"
+                let imageRef = DataManager.imageReference.child(filename)
+                imageRef.putData(data, metadata: nil) { metadata, error in
+                    if let error = error {
+                        self.makeAlert(titleInput: "Yükleme Hatası", messageInput: "Fotoğraf yüklenirken bir hata oluştu. Tekrar deneyiniz.")
+                        print("Error uploading image: \(error.localizedDescription)")
+                        self.isUploadInProgress = false
+                        self.updateSaveButtonTitle(isUploading: false)
+                    } else {
+                        imageRef.downloadURL { url, error in
+                            if let error = error {
+                                print("Error retrieving download URL: \(error.localizedDescription)")
+                            } else if let imageURL = url?.absoluteString {
+                                DataManager.productData[String(self.label.text!)] = imageURL
+                                print("Uploaded image URL: \(imageURL)")
+                                self.isUploadInProgress = false
+                                self.updateSaveButtonTitle(isUploading: false)
+                                let docRef = self.db.document("Products/\(DataManager.documentName)")
+                                docRef.updateData(["\(DataManager.messageText)": imageURL]) { error in
+                                    if let error = error {
+                                        print("Error updating document: \(error)")
+                                    } else {
+                                        if let delegate = self.delegate {
+                                            delegate.updateContentViewControllerDidSave(text: imageURL, forMessageText: DataManager.messageText)
+                                        }
+                                        DataManager.productData.removeAll()
+                                        DispatchQueue.main.async {
+                                            self.navigationController?.popViewController(animated: true)
                                         }
                                     }
                                 }
@@ -122,18 +127,21 @@ class UpdateContentViewController: UIViewController, UITextFieldDelegate {
                         }
                     }
                 }
+            }
             
-        } else {
-            if label.text == "Kod" {
-                makeAlert(titleInput: "Hata", messageInput: "Kod güncellenemez.")
-            } else {
+        } else if label.text == "Kod" {
+            makeAlert(titleInput: "Hata", messageInput: "Kod güncellenemez.")
+            
+        } else if label.text == "Evrak No" || label.text == "Kod" || label.text == "Adet" || label.text == "Operasyon" || label.text == "Fasondan Gelen Adet" || label.text == "Çıtçıt Gelen Adet" || label.text == "Çıtçıt Sayısı" || label.text == "Ütü Gelen Adet" || label.text == "Defolu" || label.text == "Parti Devam" || label.text == "Eksik" {
+            // **Updated Code: Convert text field input to Integer**
+            if let intValue = Int(textField.text ?? "") {
                 let docRef = db.document("Products/\(DataManager.documentName)")
-                docRef.updateData(["\(DataManager.messageText)":"\(self.textField.text!)"]) { error in
+                docRef.updateData(["\(DataManager.messageText)": intValue]) { error in
                     if let error = error {
                         print("Error updating document: \(error)")
                     } else {
                         if let delegate = self.delegate {
-                            delegate.updateContentViewControllerDidSave(text: self.textField.text ?? "", forMessageText: DataManager.messageText)
+                            delegate.updateContentViewControllerDidSave(text: "\(intValue)", forMessageText: DataManager.messageText)
                         }
                         DataManager.productData.removeAll()
                         DispatchQueue.main.async {
@@ -141,10 +149,68 @@ class UpdateContentViewController: UIViewController, UITextFieldDelegate {
                         }
                     }
                 }
+            } else {
+                makeAlert(titleInput: "Geçersiz Girdi", messageInput: "Lütfen geçerli bir sayı girin.")
             }
             
+        } else if label.text == "Fason Fiyat" || label.text == "Çıtçıt Tutar" || label.text == "Ütü Fiyat" {
+            let text = textField.text?.replacingOccurrences(of: ",", with: ".") ?? ""
+            if let floatValue = Float(text) {
+                let docRef = db.document("Products/\(DataManager.documentName)")
+                docRef.updateData(["\(DataManager.messageText)": floatValue]) { error in
+                    if let error = error {
+                        print("Error updating document: \(error)")
+                    } else {
+                        if let delegate = self.delegate {
+                            delegate.updateContentViewControllerDidSave(text: "\(floatValue)", forMessageText: DataManager.messageText)
+                        }
+                        DataManager.productData.removeAll()
+                        DispatchQueue.main.async {
+                            self.navigationController?.popViewController(animated: true)
+                        }
+                    }
+                }
+            } else {
+                makeAlert(titleInput: "Geçersiz Girdi", messageInput: "Lütfen geçerli bir sayı girin.")
+            }
+            
+        } else if label.text == "Tarih" || label.text == "Fasona Gidiş Tarihi" || label.text == "Fasondan Geliş Tarihi" {
+            // **Updated Code: Use date picker date**
+            let selectedDate = datePicker.date
+            let docRef = db.document("Products/\(DataManager.documentName)")
+            docRef.updateData(["\(DataManager.messageText)": selectedDate]) { error in
+                if let error = error {
+                    print("Error updating document: \(error)")
+                } else {
+                    if let delegate = self.delegate {
+                        delegate.updateContentViewControllerDidSave(text: "\(selectedDate)", forMessageText: DataManager.messageText)
+                    }
+                    DataManager.productData.removeAll()
+                    DispatchQueue.main.async {
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                }
+            }
+            
+        } else {
+            // **Updated Code: Handle default case**
+            let docRef = db.document("Products/\(DataManager.documentName)")
+            docRef.updateData(["\(DataManager.messageText)": textField.text ?? ""]) { error in
+                if let error = error {
+                    print("Error updating document: \(error)")
+                } else {
+                    if let delegate = self.delegate {
+                        delegate.updateContentViewControllerDidSave(text: self.textField.text ?? "", forMessageText: DataManager.messageText)
+                    }
+                    DataManager.productData.removeAll()
+                    DispatchQueue.main.async {
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                }
+            }
         }
     }
+
     
     private func updateSaveButtonTitle(isUploading: Bool) {
         if isUploading {
@@ -191,6 +257,20 @@ class UpdateContentViewController: UIViewController, UITextFieldDelegate {
             saveButton.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.05)
         ])
         
+        if DataManager.messageText == "Tarih" || DataManager.messageText == "Fasona Gidiş Tarihi" || DataManager.messageText == "Fasondan Geliş Tarihi" {
+            
+            view.addSubview(datePicker)
+            datePicker.translatesAutoresizingMaskIntoConstraints = false
+            textField.isHidden = true
+            NSLayoutConstraint.activate([
+                
+            datePicker.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            datePicker.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            datePicker.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            datePicker.heightAnchor.constraint(equalToConstant: 200) // Adjust height as needed
+            ])
+        }
+        
         if DataManager.messageText == "Ürün Fotoğrafı" {
             view.addSubview(imageView)
             view.addSubview(selectPhotoButton)
@@ -209,6 +289,13 @@ class UpdateContentViewController: UIViewController, UITextFieldDelegate {
                 selectPhotoButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
                 selectPhotoButton.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.05)
             ])
+        }
+        if DataManager.messageText == "Fason Fiyat" || DataManager.messageText == "Çıtçıt Tutar" || DataManager.messageText == "Ütü Fiyat" {
+            textField.keyboardType = .decimalPad
+        } else if DataManager.messageText == "Evrak No" || DataManager.messageText == "Kod" || DataManager.messageText == "Adet" || DataManager.messageText == "Operasyon" || DataManager.messageText == "Fasondan Gelen Adet" || DataManager.messageText == "Çıtçıt Gelen Adet" || DataManager.messageText == "Çıtçıt Sayısı" || DataManager.messageText == "Ütü Gelen Adet" || DataManager.messageText == "Defolu" || DataManager.messageText == "Parti Devam" || DataManager.messageText == "Eksik" {
+            textField.keyboardType = .numberPad
+        } else {
+            textField.keyboardType = .default
         }
     }
 }

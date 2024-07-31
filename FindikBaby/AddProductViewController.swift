@@ -80,13 +80,15 @@ extension AddProductViewController: UITableViewDelegate, UITableViewDataSource {
     
     @objc func saveButtonActionForProduct() {
         
-        if DataManager.productData["Kod"] == nil || (DataManager.productData["Kod"] as? String ?? "").isEmpty {
+        if DataManager.productData["Kod"] == nil {
                 makeAlert(titleInput: "Kod Bulunamadı", messageInput: "Kod eklemeden ürün kaydı yapılamaz.")
                 return
             }
         
         let productsRef = db.collection("Products")
-        productsRef.document(DataManager.productData["Kod"] as! String).setData(DataManager.productData)
+        let documentID = (DataManager.productData["Kod"] as! String)
+        productsRef.document(documentID).setData(DataManager.productData)
+
         DataManager.productData.removeAll()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {

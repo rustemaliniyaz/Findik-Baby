@@ -39,14 +39,38 @@ class ShowUpdateableDetailsViewController: UIViewController {
         let docRef = db.document("Products/\(DataManager.documentName)")
         
         docRef.getDocument { snapshot, error in
-            guard let data = snapshot?.data(), error == nil else { return }
+            guard let data = snapshot?.data(), error == nil else {
+                print("Error fetching data: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+            
             self.liste = []
             for key in self.keysList {
-                self.liste.append(data[key] as? String ?? "")
+                if let value = data[key] {
+                    switch value {
+                    case let intValue as Int:
+                        self.liste.append(String(intValue))
+                    case let floatValue as Float:
+                        self.liste.append(String(format: "%.2f", floatValue))
+                    case let dateValue as Timestamp:
+                        let date = dateValue.dateValue()
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateStyle = .medium
+                        dateFormatter.timeStyle = .short
+                        self.liste.append(dateFormatter.string(from: date))
+                    default:
+                        self.liste.append(String(describing: value))
+                    }
+                } else {
+                    self.liste.append("")
+                }
             }
-            self.tableView.reloadData()
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
     }
+
     
     private func setupUI() {
         view.addSubview(tableView)
@@ -72,21 +96,26 @@ extension ShowUpdateableDetailsViewController: UITableViewDelegate, UITableViewD
         var content = cell.defaultContentConfiguration()
         content.textProperties.alignment = .center
         
-        if keysList[indexPath.row] == "Ürün Fotoğrafı" {
-            let text = liste[indexPath.row].isEmpty ? "Fotoğraf Yok" : "Fotoğraf Var"
-            let textColor: UIColor = liste[indexPath.row].isEmpty ? .red : .systemGreen
+        let key = keysList[indexPath.row]
+        let value = liste[indexPath.row]
+        
+        if key == "Ürün Fotoğrafı" {
+            let text = value.isEmpty ? "Fotoğraf Yok" : "Fotoğraf Var"
+            let textColor: UIColor = value.isEmpty ? .red : .systemGreen
             let attributes: [NSAttributedString.Key: Any] = [.foregroundColor: textColor]
             let attributedText = NSAttributedString(string: text, attributes: attributes)
             content.attributedText = attributedText
         } else {
-            content.text = liste[indexPath.row]
+            content.text = value
         }
-        content.secondaryText = "(\(keysList[indexPath.row]))"
+        
+        content.secondaryText = "(\(key))"
         content.textProperties.alignment = .natural
         cell.contentConfiguration = content
         
         return cell
     }
+
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         DataManager.messageText = keysList[indexPath.row]
@@ -98,9 +127,9 @@ extension ShowUpdateableDetailsViewController: UITableViewDelegate, UITableViewD
 }
 
 extension ShowUpdateableDetailsViewController: UpdateContentViewControllerDelegate {
-    func updateContentViewControllerDidSave(text: String, forMessageText messageText: String) {
+    func updateContentViewControllerDidSave(text: Any, forMessageText messageText: String) {
         if let index = keysList.firstIndex(of: messageText) {
-            liste[index] = text
+            liste[index] = text as! String
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }

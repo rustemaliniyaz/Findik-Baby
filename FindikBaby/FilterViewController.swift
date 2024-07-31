@@ -87,6 +87,7 @@ class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     
     @objc private func cancelButtonTapped() {
+        DataManager.keywordValues.removeAll()
         delegate?.dismissPopup()
     }
     

@@ -33,11 +33,19 @@ class AddContentViewController: UIViewController, UITextFieldDelegate {
         textField.layer.cornerRadius = 8
         textField.layer.masksToBounds = true
         textField.layer.borderWidth = 1.0
-        textField.textColor = UITraitCollection.current.userInterfaceStyle == .dark ? .white : .black
+        textField.layer.borderColor = UIColor.systemGray.withAlphaComponent(1.0).cgColor
+        textField.textColor = UIColor(red: 0.25, green: 0.25, blue: 0.25, alpha: 1.0)
         
-        textField.layer.borderColor = UIColor(white: 1, alpha:1).cgColor
         textField.textAlignment = .center
         return textField
+    }()
+    
+    private let datePicker: UIDatePicker = {
+        let picker = UIDatePicker()
+        picker.datePickerMode = .date
+        picker.preferredDatePickerStyle = .wheels
+        picker.backgroundColor = .systemBackground
+        return picker
     }()
     
     private lazy var saveButton: UIButton = {
@@ -77,6 +85,16 @@ class AddContentViewController: UIViewController, UITextFieldDelegate {
         view.addGestureRecognizer(gestureRecognizer)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // Check if the textField is not hidden and is not already the first responder
+        if !textField.isHidden && !textField.isFirstResponder {
+            textField.becomeFirstResponder()
+        }
+    }
+
+    
     @objc func saveButtonActionForProductInfo() {
         if label.text == "Ürün Fotoğrafı" {
             if DataManager.productData["Kod"] != nil {
@@ -112,6 +130,32 @@ class AddContentViewController: UIViewController, UITextFieldDelegate {
             } else {
                 makeAlert(titleInput: "Kod Bulunamadı", messageInput: "Fotoğraf yüklemek için önce Kod giriniz.")
             }
+        } else if label.text == "Evrak No" || label.text == "Adet" || label.text == "Operasyon" || label.text == "Fasondan Gelen Adet" || label.text == "Çıtçıt Gelen Adet" || label.text == "Çıtçıt Sayısı" || label.text == "Ütü Gelen Adet" || label.text == "Defolu" || label.text == "Parti Devam" || label.text == "Eksik" {
+            DataManager.productData[String(label.text!)] = Int(textField.text!)
+            print(DataManager.productData)
+            if let category = label.text {
+                delegate?.didUpdateContent(for: category)
+            }
+            navigationController?.popViewController(animated: true)
+        } 
+        else if label.text == "Tarih" || label.text == "Fasona Gidiş Tarihi" || label.text == "Fasondan Geliş Tarihi" {
+            let selectedDate = datePicker.date
+            DataManager.productData[String(label.text!)] = selectedDate
+            print(DataManager.productData)
+            if let category = label.text {
+                delegate?.didUpdateContent(for: category)
+            }
+            navigationController?.popViewController(animated: true)
+        } else if label.text == "Fason Fiyat" || label.text == "Çıtçıt Tutar" || label.text == "Ütü Fiyat" {
+            let text = textField.text?.replacingOccurrences(of: ",", with: ".") ?? ""
+            if let floatValue = Float(text) { 
+                DataManager.productData[String(label.text!)] = floatValue
+            }
+            print(DataManager.productData)
+            if let category = label.text {
+                delegate?.didUpdateContent(for: category)
+            }
+            navigationController?.popViewController(animated: true)
         } else {
             DataManager.productData[String(label.text!)] = String(textField.text!)
             print(DataManager.productData)
@@ -120,6 +164,8 @@ class AddContentViewController: UIViewController, UITextFieldDelegate {
             }
             navigationController?.popViewController(animated: true)
         }
+        
+        
     }
     
     private func setupUIComponents() {
@@ -127,9 +173,11 @@ class AddContentViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(label)
         view.addSubview(textField)
         view.addSubview(saveButton)
+        
         label.translatesAutoresizingMaskIntoConstraints = false
         textField.translatesAutoresizingMaskIntoConstraints = false
         saveButton.translatesAutoresizingMaskIntoConstraints = false
+        
         
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
@@ -147,6 +195,20 @@ class AddContentViewController: UIViewController, UITextFieldDelegate {
             saveButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
             saveButton.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.05)
         ])
+        
+        if DataManager.messageText == "Tarih" || DataManager.messageText == "Fasona Gidiş Tarihi" || DataManager.messageText == "Fasondan Geliş Tarihi" {
+            
+            view.addSubview(datePicker)
+            datePicker.translatesAutoresizingMaskIntoConstraints = false
+            textField.isHidden = true
+            NSLayoutConstraint.activate([
+                
+            datePicker.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            datePicker.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            datePicker.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            datePicker.heightAnchor.constraint(equalToConstant: 200) // Adjust height as needed
+            ])
+        }
         
         if DataManager.messageText == "Ürün Fotoğrafı" {
             view.addSubview(imageView)
@@ -166,6 +228,14 @@ class AddContentViewController: UIViewController, UITextFieldDelegate {
                 selectPhotoButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
                 selectPhotoButton.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.05)
             ])
+        }
+        
+        if DataManager.messageText == "Fason Fiyat" || DataManager.messageText == "Çıtçıt Tutar" || DataManager.messageText == "Ütü Fiyat" {
+                textField.keyboardType = .decimalPad
+        } else if DataManager.messageText == "Evrak No" || DataManager.messageText == "Kod" || DataManager.messageText == "Adet" || DataManager.messageText == "Operasyon" || DataManager.messageText == "Fasondan Gelen Adet" || DataManager.messageText == "Çıtçıt Gelen Adet" || DataManager.messageText == "Çıtçıt Sayısı" || DataManager.messageText == "Ütü Gelen Adet" || DataManager.messageText == "Defolu" || DataManager.messageText == "Parti Devam" || DataManager.messageText == "Eksik" {
+            textField.keyboardType = .numberPad
+        } else {
+            textField.keyboardType = .default
         }
     }
     

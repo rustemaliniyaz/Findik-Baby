@@ -44,29 +44,30 @@ class FeedViewController: UIViewController {
         setupNavigationItems()
     }
     
-    private func getDataFromFirestore() {
-        DataManager.firestoreDatabase.collection("Products")
-            .order(by: "Kod")
-            .addSnapshotListener { snapshot, error in
-            if let error = error {
-                print("Error fetching documents: \(error.localizedDescription)")
-            } else {
-                if snapshot?.isEmpty != true {
-                    self.productCodes.removeAll(keepingCapacity: false)
-                    for doc in snapshot!.documents {
-                        let documentID = doc.documentID
-                        self.productCodes.append(documentID)
+    func getDataFromFirestore() {
+            DataManager.firestoreDatabase.collection("Products")
+                .order(by: "Kod")
+                .addSnapshotListener { snapshot, error in
+                if let error = error {
+                    print("Error fetching documents: \(error.localizedDescription)")
+                } else {
+                    if snapshot?.isEmpty != true {
+                        self.productCodes.removeAll(keepingCapacity: false)
+                        for doc in snapshot!.documents {
+                            let documentID = doc.documentID
+                            self.productCodes.append(documentID)
+                        }
+                        self.filteredData = self.productCodes
+                        self.filteredData.sort(by: self.compareStringsAsIntegers)
+                        self.tableView.reloadData()
                     }
-                    self.filteredData = self.productCodes
-                    self.filteredData.sort(by: { (kod1, kod2) -> Bool in
-                        return kod1 < kod2
-                    })
-                    self.tableView.reloadData()
                 }
             }
         }
-    }
     
+    
+ 
+
     private func setupUI() {
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -82,11 +83,14 @@ class FeedViewController: UIViewController {
         view.addGestureRecognizer(tapGesture)
     }
     
+    
     private func setupNavigationItems() {
         let sortButton = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"), style: .plain, target: self, action: #selector(sortButtonTapped))
         let filterButton = UIBarButtonItem(image: UIImage(systemName: "line.horizontal.3.decrease"), style: .plain, target: self, action: #selector(filterButtonTapped))
         navigationItem.rightBarButtonItems = [sortButton, filterButton]
     }
+    
+    
     
     @objc private func sortButtonTapped() {
         let sortVC = SortViewController()
@@ -139,6 +143,7 @@ class FeedViewController: UIViewController {
 
     
     @objc func dismissPopupView() {
+        DataManager.keywordValues.removeAll() 
         UIView.animate(withDuration: 0.3, animations: {
             self.navController?.view.alpha = 0
             self.dimmingView.alpha = 0
@@ -197,4 +202,79 @@ extension FeedViewController: PopupViewControllerDelegate {
             self.navController = nil
         }
     }
+    private func compareStringsAsIntegers(_ str1: String, _ str2: String) -> Bool {
+        // Ensure non-numeric values are handled gracefully
+        let int1 = Int(str1) ?? Int.max
+        let int2 = Int(str2) ?? Int.max
+        return int1 < int2
+    }
+
+    internal func sortData(by option: String) {
+        let isDescending = sortDescending(for: option)
+        let sortField = sortField(for: option)
+
+        DataManager.firestoreDatabase.collection("Products")
+            .order(by: sortField, descending: isDescending)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    print("Error fetching documents: \(error.localizedDescription)")
+                } else {
+                    self.productCodes.removeAll()
+                    for doc in snapshot?.documents ?? [] {
+                        let documentID = doc.documentID
+                        self.productCodes.append(documentID)
+                    }
+                    self.filteredData = self.productCodes
+                    self.tableView.reloadData()
+                }
+            }
+
+    }
+
+
+        
+        private func sortField(for option: String) -> String {
+            switch option {
+            case "Tarihe göre (önce en yeni)", "Tarihe göre (önce en eski)":
+                return "Tarih"
+            case "Evrak No'ya göre (yüksekten düşüğe)", "Evrak No'ya göre (düşükten yükseğe)":
+                return "Evrak No"
+            case "Adet sayısına göre (yüksekten düşüğe)", "Adet sayısına göre (düşükten yükseğe)":
+                return "Adet"
+            case "Fason fiyatına göre (yüksekten düşüğe)", "Fason fiyatına göre (düşükten yükseğe)":
+                return "Fason Fiyat"
+            case "Fasona gidiş tarihine göre (önce en yeni)", "Fasona gidiş tarihine göre (önce en eski)":
+                return "Fasona Gidiş Tarihi"
+            case "Fasondan geliş tarihine göre (önce en yeni)", "Fasondan geliş tarihine göre (önce en eski)":
+                return "Fasondan Geliş Tarihi"
+            case "Fasondan gelen adet sayısına göre (yüksekten düşüğe)", "Fasondan gelen adet sayısına göre (düşükten yükseğe)":
+                return "Fasondan Gelen Adet"
+            case "Çıtçıttan gelen adet sayısına göre (yüksekten düşüğe)", "Çıtçıttan gelen adet sayısına göre (düşükten yükseğe)":
+                return "Çıtçıt Gelen Adet"
+            case "Çıtçıt sayısına göre (yüksekten düşüğe)", "Çıtçıt sayısına göre (düşükten yükseğe)":
+                return "Çıtçıt Sayısı"
+            case "Çıtçıt tutarına göre (yüksekten düşüğe)", "Çıtçıt tutarına göre (düşükten yükseğe)":
+                return "Çıtçıt Tutar"
+            case "Ütü fiyatına göre (yüksekten düşüğe)", "Ütü fiyatına göre (düşükten yükseğe)":
+                return "Ütü Fiyat"
+            case "Ütüden gelen adet sayısına göre (yüksekten düşüğe)", "Ütüden gelen adet sayısına göre (düşükten yükseğe)":
+                return "Ütü Gelen Adet"
+            case "Defolu sayısına göre (yüksekten düşüğe)", "Defolu sayısına göre (düşükten yükseğe)":
+                return "Defolu"
+            case "Eksik sayısına göre (yüksekten düşüğe)", "Eksik sayısına göre (düşükten yükseğe)  ":
+                return "Eksik"
+            default:
+                return "Kod"
+            }
+        }
+        
+    private func sortDescending(for option: String) -> Bool {
+            switch option {
+            case "Tarihe göre (önce en yeni)", "Evrak No'ya göre (yüksekten düşüğe)", "Adet sayısına göre (yüksekten düşüğe)", "Fason fiyatına göre (yüksekten düşüğe)", "Fasona gidiş tarihine göre (önce en yeni)", "Fasondan geliş tarihine göre (önce en yeni)", "Fasondan gelen adet sayısına göre (yüksekten düşüğe)", "Çıtçıttan gelen adet sayısına göre (yüksekten düşüğe)", "Çıtçıt sayısına göre (yüksekten düşüğe)", "Çıtçıt tutarına göre (yüksekten düşüğe)", "Ütü fiyatına göre (yüksekten düşüğe)", "Ütüden gelen adet sayısına göre (yüksekten düşüğe)", "Defolu sayısına göre (yüksekten düşüğe)", "Eksik sayısına göre (yüksekten düşüğe)" :
+                return true
+            default:
+                return false
+            }
+        }
+
 }
