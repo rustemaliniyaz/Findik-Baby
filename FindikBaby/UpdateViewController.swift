@@ -73,7 +73,7 @@ class UpdateViewController: UIViewController {
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
-        view.addGestureRecognizer(tapGesture)
+        tableView.addGestureRecognizer(tapGesture)
     }
     
     @objc private func dismissKeyboard() {
@@ -112,5 +112,10 @@ extension UpdateViewController: UISearchBarDelegate {
             filteredData = productCodes.filter { $0.lowercased().contains(searchText.lowercased()) }
         }
         tableView.reloadData()
+    }
+}
+extension UpdateViewController: UIScrollViewDelegate {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        dismissKeyboard()
     }
 }

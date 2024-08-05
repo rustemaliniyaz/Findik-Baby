@@ -6,8 +6,16 @@ import FirebaseAuth
 
 class FeedViewController: UIViewController {
 
-    private var productCodes = [String]()
-    private var filteredData: [String]!
+    var filteredProductCodes = [String]()
+    var searchedProductCodes = [String]()
+    var isFiltering = false
+    var isSearching = false
+    var isSorting = false
+    var productCodes = [String]()
+    var filteredData = [String]()
+    var sortedData = [String]()
+    var previousData = [String]()
+    
     private var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.placeholder = "Kod Giriniz"
@@ -35,6 +43,7 @@ class FeedViewController: UIViewController {
         super.viewDidLoad()
         searchBar.delegate = self
         filteredData = productCodes
+        previousData = filteredData
         setupUI()
         tableView.delegate = self
         tableView.dataSource = self
@@ -80,9 +89,12 @@ class FeedViewController: UIViewController {
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
-        view.addGestureRecognizer(tapGesture)
+        tableView.addGestureRecognizer(tapGesture)
     }
     
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+            dismissKeyboard()
+        }
     
     private func setupNavigationItems() {
         let sortButton = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"), style: .plain, target: self, action: #selector(sortButtonTapped))
@@ -90,19 +102,34 @@ class FeedViewController: UIViewController {
         navigationItem.rightBarButtonItems = [sortButton, filterButton]
     }
     
-    
+
+    private func restorePreviousStateIfNeeded() {
+        if isSorting {
+            isSorting = false
+            sortedData = []
+            filteredData = previousData
+            tableView.reloadData()
+        }
+    }
+
+
     
     @objc private func sortButtonTapped() {
+        restorePreviousStateIfNeeded()
+        previousData = filteredData
         let sortVC = SortViewController()
         sortVC.delegate = self
         presentPopupViewController(sortVC)
     }
-    
+
     @objc private func filterButtonTapped() {
+        searchBar.resignFirstResponder()
+        restorePreviousStateIfNeeded()
         let filterVC = FilterViewController()
         filterVC.delegate = self
         presentPopupViewController(filterVC)
     }
+
     
     @objc private func dismissKeyboard() {
         searchBar.resignFirstResponder()
@@ -144,6 +171,9 @@ class FeedViewController: UIViewController {
     
     @objc func dismissPopupView() {
         DataManager.keywordValues.removeAll() 
+        for key in DataManager.checkmarkStatesForFilters.keys {
+            DataManager.checkmarkStatesForFilters[key] = false
+        }
         UIView.animate(withDuration: 0.3, animations: {
             self.navController?.view.alpha = 0
             self.dimmingView.alpha = 0
@@ -159,38 +189,96 @@ class FeedViewController: UIViewController {
 extension FeedViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredData.count
+        if isSearching {
+            return searchedProductCodes.count
+        } else if isSorting {
+            return sortedData.count
+        } else if isFiltering {
+            return filteredProductCodes.count
+        } else {
+            return filteredData.count
+        }
     }
+
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         var content = cell.defaultContentConfiguration()
-        content.text = filteredData[indexPath.row]
-        cell.contentConfiguration = content
+
+        if isSearching {
+            content.text = searchedProductCodes[indexPath.row]
+        } else if isSorting {
+            content.text = sortedData[indexPath.row]
+        } else if isFiltering {
+            content.text = filteredProductCodes[indexPath.row]
+        } else {
+            content.text = filteredData[indexPath.row]
+        }
         
+        cell.contentConfiguration = content
         return cell
     }
+
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        DataManager.documentName = filteredData[indexPath.row]
+        if isSearching {
+            DataManager.documentName = searchedProductCodes[indexPath.row]
+        } else if isSorting {
+            DataManager.documentName = sortedData[indexPath.row]
+        } else if isFiltering {
+            DataManager.documentName = filteredProductCodes[indexPath.row]
+        } else {
+            DataManager.documentName = filteredData[indexPath.row]
+        }
+        
         tableView.deselectRow(at: indexPath, animated: true)
         navigationController?.pushViewController(ShowDetailsViewController(), animated: true)
     }
+
 }
 
 extension FeedViewController: UISearchBarDelegate {
-    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
-            filteredData = productCodes
+            isSearching = false
+            if isSorting {
+                searchedProductCodes = sortedData
+            } else if isFiltering {
+                searchedProductCodes = filteredProductCodes
+            } else {
+                searchedProductCodes = productCodes
+            }
         } else {
-            filteredData = productCodes.filter { $0.lowercased().contains(searchText.lowercased()) }
+            isSearching = true
+            if isSorting {
+                searchedProductCodes = sortedData.filter { $0.lowercased().contains(searchText.lowercased()) }
+            } else if isFiltering {
+                searchedProductCodes = filteredProductCodes.filter { $0.lowercased().contains(searchText.lowercased()) }
+            } else {
+                searchedProductCodes = productCodes.filter { $0.lowercased().contains(searchText.lowercased()) }
+            }
         }
+        searchedProductCodes.sort(by: compareStringsAsIntegers)
         tableView.reloadData()
     }
 }
 
+
+
+
 extension FeedViewController: PopupViewControllerDelegate {
+    func didApplyFilters(filteredArray: [String]) {
+        self.filteredProductCodes = filteredArray.sorted(by: compareStringsAsIntegers)
+        self.isFiltering = true
+        print(filteredProductCodes)
+        print(isFiltering)
+        self.tableView.reloadData()
+    }
+
+    func turnIsFilteringToFalse() {
+        self.isFiltering = false
+        self.tableView.reloadData()
+    }
     func dismissPopup() {
         UIView.animate(withDuration: 0.3, animations: {
             self.navController?.view.alpha = 0
@@ -202,14 +290,8 @@ extension FeedViewController: PopupViewControllerDelegate {
             self.navController = nil
         }
     }
-    private func compareStringsAsIntegers(_ str1: String, _ str2: String) -> Bool {
-        // Ensure non-numeric values are handled gracefully
-        let int1 = Int(str1) ?? Int.max
-        let int2 = Int(str2) ?? Int.max
-        return int1 < int2
-    }
-
-    internal func sortData(by option: String) {
+    
+    func sortData(by option: String) {
         let isDescending = sortDescending(for: option)
         let sortField = sortField(for: option)
 
@@ -224,12 +306,38 @@ extension FeedViewController: PopupViewControllerDelegate {
                         let documentID = doc.documentID
                         self.productCodes.append(documentID)
                     }
-                    self.filteredData = self.productCodes
+                    self.isSorting = true
+                    self.sortedData = self.productCodes
+                    print("first sortedData \(self.sortedData)")
+                    if self.isFiltering {
+                        var newArray = [String]()
+                        for value in self.filteredProductCodes {
+                            newArray.append(value)
+                        }
+                        print("newarray: \(newArray)")
+                        print("sortedData: \(self.sortedData)")
+                        self.sortedData = self.getMatchingItems(firstArray: newArray, secondArray: self.sortedData)
+                        print("matched filtered sortedData \(self.sortedData)")
+                    }
                     self.tableView.reloadData()
                 }
             }
-
     }
+    
+    func getMatchingItems(firstArray: [String], secondArray: [String]) -> [String] {
+        
+        let firstArraySet = Set(firstArray)
+        let resultArray = secondArray.filter { firstArraySet.contains($0) }
+        return resultArray
+    }
+    
+    private func compareStringsAsIntegers(_ str1: String, _ str2: String) -> Bool {
+        let int1 = Int(str1) ?? Int.max
+        let int2 = Int(str2) ?? Int.max
+        return int1 > int2
+    }
+
+    
 
 
         
@@ -277,4 +385,10 @@ extension FeedViewController: PopupViewControllerDelegate {
             }
         }
 
+}
+
+extension FeedViewController: UIScrollViewDelegate {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        dismissKeyboard()
+    }
 }

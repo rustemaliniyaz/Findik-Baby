@@ -8,7 +8,7 @@ import FirebaseFirestore
 class AddProductViewController: UIViewController {
 
     let db = Firestore.firestore()
-    static var checkmarkStates = [String: Bool]()
+    
     var accessoryType : UITableViewCell.AccessoryType = .none
     private let tableView: UITableView = {
         let tableView = UITableView()
@@ -31,8 +31,7 @@ class AddProductViewController: UIViewController {
         return button
     }()
     
-    let categories = [
-        "Ürün Fotoğrafı", "Tarih", "Evrak No", "Kod", "Adet", "Açıklama", "Aksesuar", "Baskı", "Ense Baskı", "Fason Dikiş", "Operasyon", "Fason Fiyat", "Fasona Gidiş Tarihi", "Fasondan Geliş Tarihi", "Fasondan Gelen Adet", "Çıtçıt", "Çıtçıt Gelen Adet", "Çıtçıt Sayısı", "Çıtçıt Tutar", "Ütü", "Ütü Fiyat", "Ütü Gelen Adet", "Defolu", "Parti Devam", "Eksik", "Model Açıklama"]
+    let categories = DataManager.elements
     
     
     
@@ -43,15 +42,18 @@ class AddProductViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         navigationItem.backButtonTitle = "Vazgeç"
-        for category in categories {
-                    if DataManager.checkmarkStates[category] == nil {
-                        DataManager.checkmarkStates[category] = false
-                    }
-                }
+        setupNavigationBar()
+        initializeCheckmarkStates()
         
     }
     
-    
+    private func initializeCheckmarkStates() {
+        for category in categories {
+            if DataManager.checkmarkStates[category] == nil {
+                DataManager.checkmarkStates[category] = false
+            }
+        }
+    }
     
     private func setupUI() {
         view.backgroundColor = .systemBackground
@@ -73,11 +75,19 @@ class AddProductViewController: UIViewController {
             saveButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5)
         ])
     }
-}
-
-
-extension AddProductViewController: UITableViewDelegate, UITableViewDataSource {
     
+    private func setupNavigationBar() {
+            let clearButton = UIBarButtonItem(title: "Temizle", style: .plain, target: self, action: #selector(clearButtonAction))
+            navigationItem.rightBarButtonItem = clearButton
+        }
+        
+    @objc private func clearButtonAction() {
+        DataManager.productData.removeAll()
+        for key in DataManager.checkmarkStates.keys {
+            DataManager.checkmarkStates[key] = false
+        }
+        tableView.reloadData()
+    }
     @objc func saveButtonActionForProduct() {
         
         if DataManager.productData["Kod"] == nil {
@@ -107,6 +117,14 @@ extension AddProductViewController: UITableViewDelegate, UITableViewDataSource {
         self.present(alert, animated: true)
     }
     
+    
+}
+
+
+extension AddProductViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return categories.count
     }
@@ -132,6 +150,24 @@ extension AddProductViewController: UITableViewDelegate, UITableViewDataSource {
         addContentVC.delegate = self
         navigationController?.pushViewController(addContentVC, animated: true)
     }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+            let clearAction = UIContextualAction(style: .destructive, title: "Temizle") { (action, view, completionHandler) in
+                if DataManager.productData[self.categories[indexPath.row]] != nil {
+                    DataManager.productData.removeValue(forKey: self.categories[indexPath.row])
+                    DataManager.checkmarkStates[self.categories[indexPath.row]] = false
+                    self.tableView.reloadData()
+                }
+                completionHandler(true)
+            }
+            clearAction.backgroundColor = .systemRed
+            
+            let configuration = UISwipeActionsConfiguration(actions: [clearAction])
+            configuration.performsFirstActionWithFullSwipe = false
+            return configuration
+    }
+    
+    
 
 }
 

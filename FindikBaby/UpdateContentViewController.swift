@@ -29,6 +29,7 @@ class UpdateContentViewController: UIViewController, UITextFieldDelegate {
         picker.datePickerMode = .date
         picker.preferredDatePickerStyle = .wheels
         picker.backgroundColor = .systemBackground
+        picker.locale = Locale(identifier: "tr_TR")
         return picker
     }()
     private let imageView: UIImageView = {
@@ -88,7 +89,6 @@ class UpdateContentViewController: UIViewController, UITextFieldDelegate {
 
     @objc func saveButtonActionForProductInfo() {
         if label.text == "Ürün Fotoğrafı" {
-            // Handle image upload
             if let data = imageView.image?.jpegData(compressionQuality: 0.5) {
                 isUploadInProgress = true
                 updateSaveButtonTitle(isUploading: true)
@@ -133,7 +133,7 @@ class UpdateContentViewController: UIViewController, UITextFieldDelegate {
             makeAlert(titleInput: "Hata", messageInput: "Kod güncellenemez.")
             
         } else if label.text == "Evrak No" || label.text == "Kod" || label.text == "Adet" || label.text == "Operasyon" || label.text == "Fasondan Gelen Adet" || label.text == "Çıtçıt Gelen Adet" || label.text == "Çıtçıt Sayısı" || label.text == "Ütü Gelen Adet" || label.text == "Defolu" || label.text == "Parti Devam" || label.text == "Eksik" {
-            // **Updated Code: Convert text field input to Integer**
+           
             if let intValue = Int(textField.text ?? "") {
                 let docRef = db.document("Products/\(DataManager.documentName)")
                 docRef.updateData(["\(DataManager.messageText)": intValue]) { error in
@@ -175,7 +175,6 @@ class UpdateContentViewController: UIViewController, UITextFieldDelegate {
             }
             
         } else if label.text == "Tarih" || label.text == "Fasona Gidiş Tarihi" || label.text == "Fasondan Geliş Tarihi" {
-            // **Updated Code: Use date picker date**
             let selectedDate = datePicker.date
             let docRef = db.document("Products/\(DataManager.documentName)")
             docRef.updateData(["\(DataManager.messageText)": selectedDate]) { error in
@@ -193,7 +192,6 @@ class UpdateContentViewController: UIViewController, UITextFieldDelegate {
             }
             
         } else {
-            // **Updated Code: Handle default case**
             let docRef = db.document("Products/\(DataManager.documentName)")
             docRef.updateData(["\(DataManager.messageText)": textField.text ?? ""]) { error in
                 if let error = error {
@@ -267,7 +265,7 @@ class UpdateContentViewController: UIViewController, UITextFieldDelegate {
             datePicker.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             datePicker.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             datePicker.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
-            datePicker.heightAnchor.constraint(equalToConstant: 200) // Adjust height as needed
+            datePicker.heightAnchor.constraint(equalToConstant: 200) 
             ])
         }
         
@@ -290,13 +288,15 @@ class UpdateContentViewController: UIViewController, UITextFieldDelegate {
                 selectPhotoButton.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.05)
             ])
         }
-        if DataManager.messageText == "Fason Fiyat" || DataManager.messageText == "Çıtçıt Tutar" || DataManager.messageText == "Ütü Fiyat" {
+        switch DataManager.messageText {
+        case "Fason Fiyat", "Çıtçıt Tutar", "Ütü Fiyat":
             textField.keyboardType = .decimalPad
-        } else if DataManager.messageText == "Evrak No" || DataManager.messageText == "Kod" || DataManager.messageText == "Adet" || DataManager.messageText == "Operasyon" || DataManager.messageText == "Fasondan Gelen Adet" || DataManager.messageText == "Çıtçıt Gelen Adet" || DataManager.messageText == "Çıtçıt Sayısı" || DataManager.messageText == "Ütü Gelen Adet" || DataManager.messageText == "Defolu" || DataManager.messageText == "Parti Devam" || DataManager.messageText == "Eksik" {
+        case "Evrak No", "Kod", "Adet", "Operasyon", "Fasondan Gelen Adet", "Çıtçıt Gelen Adet", "Çıtçıt Sayısı", "Ütü Gelen Adet", "Defolu", "Parti Devam", "Eksik":
             textField.keyboardType = .numberPad
-        } else {
+        default:
             textField.keyboardType = .default
         }
+
     }
 }
 

@@ -45,6 +45,7 @@ class AddContentViewController: UIViewController, UITextFieldDelegate {
         picker.datePickerMode = .date
         picker.preferredDatePickerStyle = .wheels
         picker.backgroundColor = .systemBackground
+        picker.locale = Locale(identifier: "tr_TR")
         return picker
     }()
     
@@ -88,7 +89,6 @@ class AddContentViewController: UIViewController, UITextFieldDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        // Check if the textField is not hidden and is not already the first responder
         if !textField.isHidden && !textField.isFirstResponder {
             textField.becomeFirstResponder()
         }
@@ -96,7 +96,7 @@ class AddContentViewController: UIViewController, UITextFieldDelegate {
 
     
     @objc func saveButtonActionForProductInfo() {
-        if label.text == "Ürün Fotoğrafı" {
+         if label.text == "Ürün Fotoğrafı" {
             if DataManager.productData["Kod"] != nil {
                 if let data = imageView.image?.jpegData(compressionQuality: 0.5) {
                     isUploadInProgress = true
@@ -131,22 +131,38 @@ class AddContentViewController: UIViewController, UITextFieldDelegate {
                 makeAlert(titleInput: "Kod Bulunamadı", messageInput: "Fotoğraf yüklemek için önce Kod giriniz.")
             }
         } else if label.text == "Evrak No" || label.text == "Adet" || label.text == "Operasyon" || label.text == "Fasondan Gelen Adet" || label.text == "Çıtçıt Gelen Adet" || label.text == "Çıtçıt Sayısı" || label.text == "Ütü Gelen Adet" || label.text == "Defolu" || label.text == "Parti Devam" || label.text == "Eksik" {
+            if textField.text == "" {
+                navigationController?.popViewController(animated: true)
+                return
+            }
             DataManager.productData[String(label.text!)] = Int(textField.text!)
             print(DataManager.productData)
             if let category = label.text {
                 delegate?.didUpdateContent(for: category)
             }
             navigationController?.popViewController(animated: true)
-        } 
-        else if label.text == "Tarih" || label.text == "Fasona Gidiş Tarihi" || label.text == "Fasondan Geliş Tarihi" {
+        } else if label.text == "Tarih" || label.text == "Fasona Gidiş Tarihi" || label.text == "Fasondan Geliş Tarihi" {
             let selectedDate = datePicker.date
-            DataManager.productData[String(label.text!)] = selectedDate
-            print(DataManager.productData)
-            if let category = label.text {
-                delegate?.didUpdateContent(for: category)
+            let calendar = Calendar.current
+            let components = calendar.dateComponents([.year, .month, .day], from: selectedDate)
+            
+            if let date = calendar.date(from: components) {
+                DataManager.productData[String(label.text!)] = date
+                print(DataManager.productData)
+                if let category = label.text {
+                    delegate?.didUpdateContent(for: category)
+                }
+                navigationController?.popViewController(animated: true)
+            } else {
+                makeAlert(titleInput: "Tarih Hatası", messageInput: "Geçerli bir tarih seçiniz.")
             }
-            navigationController?.popViewController(animated: true)
         } else if label.text == "Fason Fiyat" || label.text == "Çıtçıt Tutar" || label.text == "Ütü Fiyat" {
+            if textField.text == "" {
+                navigationController?.popViewController(animated: true)
+                return
+            }
+            
+            
             let text = textField.text?.replacingOccurrences(of: ",", with: ".") ?? ""
             if let floatValue = Float(text) { 
                 DataManager.productData[String(label.text!)] = floatValue
@@ -157,6 +173,10 @@ class AddContentViewController: UIViewController, UITextFieldDelegate {
             }
             navigationController?.popViewController(animated: true)
         } else {
+            if textField.text == "" {
+                navigationController?.popViewController(animated: true)
+                return
+            }
             DataManager.productData[String(label.text!)] = String(textField.text!)
             print(DataManager.productData)
             if let category = label.text {
@@ -206,7 +226,7 @@ class AddContentViewController: UIViewController, UITextFieldDelegate {
             datePicker.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             datePicker.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             datePicker.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
-            datePicker.heightAnchor.constraint(equalToConstant: 200) // Adjust height as needed
+            datePicker.heightAnchor.constraint(equalToConstant: 200) 
             ])
         }
         
@@ -230,11 +250,12 @@ class AddContentViewController: UIViewController, UITextFieldDelegate {
             ])
         }
         
-        if DataManager.messageText == "Fason Fiyat" || DataManager.messageText == "Çıtçıt Tutar" || DataManager.messageText == "Ütü Fiyat" {
-                textField.keyboardType = .decimalPad
-        } else if DataManager.messageText == "Evrak No" || DataManager.messageText == "Kod" || DataManager.messageText == "Adet" || DataManager.messageText == "Operasyon" || DataManager.messageText == "Fasondan Gelen Adet" || DataManager.messageText == "Çıtçıt Gelen Adet" || DataManager.messageText == "Çıtçıt Sayısı" || DataManager.messageText == "Ütü Gelen Adet" || DataManager.messageText == "Defolu" || DataManager.messageText == "Parti Devam" || DataManager.messageText == "Eksik" {
+        switch DataManager.messageText {
+        case "Fason Fiyat", "Çıtçıt Tutar", "Ütü Fiyat":
+            textField.keyboardType = .decimalPad
+        case "Evrak No", "Kod", "Adet", "Operasyon", "Fasondan Gelen Adet", "Çıtçıt Gelen Adet", "Çıtçıt Sayısı", "Ütü Gelen Adet", "Defolu", "Parti Devam", "Eksik":
             textField.keyboardType = .numberPad
-        } else {
+        default:
             textField.keyboardType = .default
         }
     }

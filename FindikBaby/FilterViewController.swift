@@ -1,8 +1,18 @@
 import UIKit
+protocol FilterViewControllerDelegate: AnyObject {
+    func didApplyFilters(filteredArray: [String])
+    func dismissPopup()
+    func turnIsFilteringToFalse()
+}
 
 class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     weak var delegate: PopupViewControllerDelegate?
+    
     var selectedFilterOption: String?
+    var finishedArray = [String]()
+    var finishedArrayEverContainedAnyValue: Bool = false
+    var checkedIndices: Set<Int> = []
+    
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.backgroundColor = .systemBackground
@@ -10,23 +20,24 @@ class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDa
         return tableView
     }()
     
-    let filterOptions = [
-        "Ürün Fotoğrafı", "Tarih", "Evrak No", "Kod", "Adet", "Açıklama",
-        "Aksesuar", "Baskı", "Ense Baskı", "Fason Dikiş", "Operasyon",
-        "Fason Fiyat", "Fasona Gidiş Tarihi", "Fasondan Geliş Tarihi",
-        "Fasondan Gelen Adet", "Çıtçıt", "Çıtçıt Gelen Adet", "Çıtçıt Sayısı",
-        "Çıtçıt Tutar", "Ütü", "Ütü Fiyat", "Ütü Gelen Adet", "Defolu",
-        "Parti Devam", "Eksik", "Model Açıklama"
-    ]
+    let filterOptions = DataManager.elements
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Filter"
+        title = "Filtre"
         view.backgroundColor = .white
         setupTableView()
         setupButtons()
+        initializeCheckmarkStatesForFilters()
     }
     
+    private func initializeCheckmarkStatesForFilters() {
+        for category in filterOptions {
+            if DataManager.checkmarkStatesForFilters[category] == nil {
+                DataManager.checkmarkStatesForFilters[category] = false
+            }
+        }
+    }
     private func setupTableView() {
         view.addSubview(tableView)
         tableView.delegate = self
@@ -38,11 +49,12 @@ class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDa
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -80)
         ])
+        
     }
     
     private func setupButtons() {
         let cancelButton = UIButton(type: .system)
-        cancelButton.setTitle("Vazgeç", for: .normal)
+        cancelButton.setTitle("Temizle", for: .normal)
         cancelButton.setTitleColor(.white, for: .normal)
         cancelButton.backgroundColor = UIColor.systemRed.withAlphaComponent(0.8)
         cancelButton.layer.cornerRadius = 8
@@ -88,10 +100,25 @@ class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     @objc private func cancelButtonTapped() {
         DataManager.keywordValues.removeAll()
+        for key in DataManager.checkmarkStatesForFilters.keys {
+            DataManager.checkmarkStatesForFilters[key] = false
+        }
+        
+        self.tableView.reloadData()
+        delegate?.turnIsFilteringToFalse()
         delegate?.dismissPopup()
     }
     
     @objc private func applyButtonTapped() {
+        finishedArrayEverContainedAnyValue = false
+        delegate?.didApplyFilters(filteredArray: finishedArray)
+        print(FeedViewController().filteredProductCodes)
+        print(FeedViewController().isFiltering)
+        
+        DataManager.keywordValues.removeAll()
+        for key in DataManager.checkmarkStatesForFilters.keys {
+            DataManager.checkmarkStatesForFilters[key] = false
+        }
         delegate?.dismissPopup()
     }
     func updateCheckmark(for filterOption: String) {
@@ -118,33 +145,61 @@ class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         cell.textLabel?.text = filterOptions[indexPath.row]
+        if DataManager.checkmarkStatesForFilters[filterOptions[indexPath.row]] == true {
+                    cell.accessoryType = .checkmark
+                } else {
+                    cell.accessoryType = .none
+                }
         return cell
     }
     
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            guard indexPath.row < filterOptions.count else {
-                return
-            }
+        guard indexPath.row < filterOptions.count else {
+            return
+        }
+        let cell = tableView.cellForRow(at: indexPath)
+        if cell?.accessoryType == .checkmark {
+            tableView.deselectRow(at: indexPath, animated: true)
+            return
+        }
         
         selectedFilterOption = filterOptions[indexPath.row]
-            let selectedOption = filterOptions[indexPath.row]
-            if selectedOption == "Ürün Fotoğrafı" {
-                presentFilteringOptions(withPhotoOptions: true, pickerViewOptions: false, textFieldsOptions: false, keywordTextFieldOptions: false)
-            } else if selectedOption == "Tarih" || selectedOption == "Fasona Gidiş Tarihi" || selectedOption == "Fasondan Geliş Tarihi" {
-                presentFilteringOptions(withPhotoOptions: false, pickerViewOptions: true, textFieldsOptions: false, keywordTextFieldOptions: false)
-            } else if selectedOption == "Evrak No" || selectedOption == "Kod" || selectedOption == "Adet" || selectedOption == "Operasyon" || selectedOption == "Fason Fiyat" || selectedOption == "Fasondan Gelen Adet" || selectedOption == "Çıtçıt Gelen Adet" || selectedOption == "Çıtçıt Sayısı" || selectedOption == "Çıtçıt Tutar" || selectedOption == "Ütü Fiyat" || selectedOption == "Ütü Gelen Adet" || selectedOption == "Defolu" || selectedOption == "Parti Devam" || selectedOption == "Eksik" {
-                presentFilteringOptions(withPhotoOptions: false, pickerViewOptions: false, textFieldsOptions: true, keywordTextFieldOptions: false)
-            } else if selectedOption == "Açıklama" || selectedOption == "Aksesuar" || selectedOption == "Baskı" || selectedOption == "Ense Baskı" || selectedOption == "Fason Dikiş" || selectedOption == "Çıtçıt" || selectedOption == "Ütü" || selectedOption == "Model Açıklama" {
-                presentFilteringOptions(withPhotoOptions: false, pickerViewOptions: false, textFieldsOptions: false, keywordTextFieldOptions: true)
-            } else {
-                presentFilteringOptions(withPhotoOptions: false, pickerViewOptions: false, textFieldsOptions: false, keywordTextFieldOptions: false)
-            }
-
-            tableView.deselectRow(at: indexPath, animated: true)
+        let selectedOption = filterOptions[indexPath.row]
+        switch selectedOption {
+        case "Ürün Fotoğrafı":
+            presentFilteringOptions(withPhotoOptions: true, pickerViewOptions: false, textFieldsOptions: false, keywordTextFieldOptions: false)
+        case "Tarih", "Fasona Gidiş Tarihi", "Fasondan Geliş Tarihi":
+            presentFilteringOptions(withPhotoOptions: false, pickerViewOptions: true, textFieldsOptions: false, keywordTextFieldOptions: false)
+        case "Evrak No", "Kod", "Adet", "Operasyon", "Fason Fiyat", "Fasondan Gelen Adet", "Çıtçıt Gelen Adet", "Çıtçıt Sayısı", "Çıtçıt Tutar", "Ütü Fiyat", "Ütü Gelen Adet", "Defolu", "Parti Devam", "Eksik":
+            presentFilteringOptions(withPhotoOptions: false, pickerViewOptions: false, textFieldsOptions: true, keywordTextFieldOptions: false)
+        case "Açıklama", "Aksesuar", "Baskı", "Ense Baskı", "Fason Dikiş", "Çıtçıt", "Ütü", "Model Açıklama":
+            presentFilteringOptions(withPhotoOptions: false, pickerViewOptions: false, textFieldsOptions: false, keywordTextFieldOptions: true)
+        default:
+            presentFilteringOptions(withPhotoOptions: false, pickerViewOptions: false, textFieldsOptions: false, keywordTextFieldOptions: false)
         }
+        
+        print("FilterViewController's finishedArray:\(self.finishedArray)")
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+
+
 }
 
+
+
 extension FilterViewController: FilteringOptionsDelegate {
+    func didUpdateFilteredResults(_ results: [String]) {
+        if finishedArray.isEmpty && finishedArrayEverContainedAnyValue == false {
+            finishedArray.append(contentsOf: results)
+            finishedArrayEverContainedAnyValue = true
+        } else if finishedArray.isEmpty && finishedArrayEverContainedAnyValue == true {
+            return
+        } else {
+            finishedArray = finishedArray.filter { results.contains($0) }
+        }
+    }
+    
     func applyFilters(filter1: String, filter2: String, keyword: String) {
             if let selectedFilterOption = selectedFilterOption {
                 if let index = filterOptions.firstIndex(of: selectedFilterOption) {
@@ -157,5 +212,9 @@ extension FilterViewController: FilteringOptionsDelegate {
             
             
             dismiss(animated: true, completion: nil)
+        }
+    func didUpdateContent(for category: String) {
+            DataManager.checkmarkStatesForFilters[category] = true
+            tableView.reloadData()
         }
 }

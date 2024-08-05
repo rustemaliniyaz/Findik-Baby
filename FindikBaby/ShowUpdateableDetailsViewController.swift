@@ -32,8 +32,7 @@ class ShowUpdateableDetailsViewController: UIViewController {
         getData()
     }
 
-    var keysList = [
-       "Ürün Fotoğrafı", "Tarih", "Evrak No", "Kod", "Adet", "Açıklama", "Aksesuar", "Baskı", "Ense Baskı", "Fason Dikiş", "Operasyon", "Fason Fiyat", "Fasona Gidiş Tarihi", "Fasondan Geliş Tarihi", "Fasondan Gelen Adet", "Çıtçıt", "Çıtçıt Gelen Adet", "Çıtçıt Sayısı", "Çıtçıt Tutar", "Ütü", "Ütü Fiyat", "Ütü Gelen Adet", "Defolu", "Parti Devam", "Eksik", "Model Açıklama"]
+    var keysList = DataManager.elements
     
     func getData() {
         let docRef = db.document("Products/\(DataManager.documentName)")
@@ -57,6 +56,7 @@ class ShowUpdateableDetailsViewController: UIViewController {
                         let dateFormatter = DateFormatter()
                         dateFormatter.dateStyle = .medium
                         dateFormatter.timeStyle = .short
+                        dateFormatter.locale = Locale(identifier: "tr_TR")
                         self.liste.append(dateFormatter.string(from: date))
                     default:
                         self.liste.append(String(describing: value))

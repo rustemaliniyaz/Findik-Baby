@@ -6,8 +6,8 @@ import FirebaseFirestore
 class ShowDetailsViewController: UIViewController {
 
     let db = Firestore.firestore()
-    var liste = [Any]() // Changed to [Any]
-    var keysList = [Any]() // Changed to [Any]
+    var liste = [Any]()
+    var keysList = [Any]()
     var chosenIndex = String()
     
     private var productKeys = [String]()
@@ -40,9 +40,7 @@ class ShowDetailsViewController: UIViewController {
         }
     }
     
-    let categories = [
-        "Ürün Fotoğrafı", "Tarih", "Evrak No", "Kod", "Adet", "Açıklama", "Aksesuar", "Baskı", "Ense Baskı", "Fason Dikiş", "Operasyon", "Fason Fiyat", "Fasona Gidiş Tarihi", "Fasondan Geliş Tarihi", "Fasondan Gelen Adet", "Çıtçıt", "Çıtçıt Gelen Adet", "Çıtçıt Sayısı", "Çıtçıt Tutar", "Ütü", "Ütü Fiyat", "Ütü Gelen Adet", "Defolu", "Parti Devam", "Eksik", "Model Açıklama"
-    ]
+    let categories = DataManager.elements
     
     func getData() {
             let docRef = db.document("Products/\(DataManager.documentName)")
@@ -53,10 +51,10 @@ class ShowDetailsViewController: UIViewController {
                         if key == "Tarih" || key == "Fasona Gidiş Tarihi" || key == "Fasondan Geliş Tarihi" {
                             if let timestamp = value as? Timestamp {
                                 let date = timestamp.dateValue()
-                                self.liste.append(date) // Append Date
+                                self.liste.append(date)
                             }
                         } else {
-                            self.liste.append(value) // Append Any type
+                            self.liste.append(value)
                         }
                         self.keysList.append(key)
                     }
@@ -89,19 +87,19 @@ extension ShowDetailsViewController: UITableViewDelegate, UITableViewDataSource 
             let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
             var content = cell.defaultContentConfiguration()
             content.textProperties.alignment = .center
-            content.secondaryText = keysList[indexPath.row] as? String // Cast to String
+            content.secondaryText = keysList[indexPath.row] as? String
 
-            // Handle different types of data
             if let value = liste[indexPath.row] as? String {
                 content.text = value
             } else if let value = liste[indexPath.row] as? Int {
                 content.text = String(value)
             } else if let value = liste[indexPath.row] as? Float {
-                content.text = String(value) // Format float with 2 decimal places
+                content.text = String(value)
             } else if let value = liste[indexPath.row] as? Date {
                 let formatter = DateFormatter()
                 formatter.dateStyle = .medium
                 formatter.timeStyle = .none
+                formatter.locale = Locale(identifier: "tr_TR")
                 content.text = formatter.string(from: value)
             } else {
                 content.text = "Unknown Type"
@@ -122,7 +120,7 @@ extension ShowDetailsViewController: UITableViewDelegate, UITableViewDataSource 
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         var content = cell.defaultContentConfiguration()
         content.textProperties.alignment = .center
-        content.secondaryText = keysList[indexPath.row] as? String // Cast to String
+        content.secondaryText = keysList[indexPath.row] as? String
         if content.secondaryText == "Ürün Fotoğrafı" {
             let showPictureVC = ShowPictureViewController()
             navigationController?.pushViewController(showPictureVC, animated: true)
