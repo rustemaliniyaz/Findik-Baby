@@ -97,32 +97,104 @@
 		114FA9EC2C516DCF002B688A /* FindikBaby */ = {
 			isa = PBXGroup;
 			children = (
+				11B2A3532C6507FF0097A94B /* View Controllers */,
+				11B2A3512C6507BD0097A94B /* Supporting */,
 				114FAA252C517686002B688A /* GoogleService-Info.plist */,
-				114FA9ED2C516DCF002B688A /* AppDelegate.swift */,
-				114FA9EF2C516DCF002B688A /* SceneDelegate.swift */,
 				114FA9F62C516DD2002B688A /* Assets.xcassets */,
 				114FA9F82C516DD2002B688A /* LaunchScreen.storyboard */,
 				114FA9FB2C516DD2002B688A /* Info.plist */,
-				114FAA012C5171CC002B688A /* LoginViewController.swift */,
+			);
+			path = FindikBaby;
+			sourceTree = "<group>";
+		};
+		11B2A3512C6507BD0097A94B /* Supporting */ = {
+			isa = PBXGroup;
+			children = (
+				114FA9ED2C516DCF002B688A /* AppDelegate.swift */,
+				114FA9EF2C516DCF002B688A /* SceneDelegate.swift */,
 				114FAA032C5171E4002B688A /* TabBarController.swift */,
-				114FAA052C5171F6002B688A /* FeedViewController.swift */,
-				114FAA072C517203002B688A /* FilterViewController.swift */,
-				114FAA1B2C5172DD002B688A /* FilteringOptionsViewController.swift */,
 				114FAA232C5173DC002B688A /* DataManager.swift */,
-				114FAA092C51720C002B688A /* SortViewController.swift */,
-				114FAA0B2C517221002B688A /* ShowDetailsViewController.swift */,
-				114FAA0D2C517234002B688A /* ShowPictureViewController.swift */,
-				114FAA0F2C51725A002B688A /* AddProductViewController.swift */,
-				114FAA112C517271002B688A /* AddContentViewController.swift */,
-				114FAA132C51727F002B688A /* UpdateViewController.swift */,
-				114FAA152C51728E002B688A /* ShowUpdateableDetailsViewController.swift */,
-				114FAA172C51729F002B688A /* UpdateContentViewController.swift */,
-				114FAA192C5172B3002B688A /* SettingsViewController.swift */,
 				114FAA1D2C5172ED002B688A /* PopupViewControllerDelegate.swift */,
 				114FAA1F2C517309002B688A /* CustomTableViewCell.swift */,
 				114FAA202C517309002B688A /* CustomTableViewCell.xib */,
 			);
-			path = FindikBaby;
+			path = Supporting;
+			sourceTree = "<group>";
+		};
+		11B2A3532C6507FF0097A94B /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				11B2A3582C65084A0097A94B /* Login */,
+				11B2A3572C6508370097A94B /* Feed */,
+				11B2A3592C6508540097A94B /* Add Product */,
+				11B2A35A2C6508680097A94B /* Update */,
+				11B2A35B2C65087E0097A94B /* Settings */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		11B2A3542C6508080097A94B /* Filter */ = {
+			isa = PBXGroup;
+			children = (
+				114FAA072C517203002B688A /* FilterViewController.swift */,
+				114FAA1B2C5172DD002B688A /* FilteringOptionsViewController.swift */,
+			);
+			path = Filter;
+			sourceTree = "<group>";
+		};
+		11B2A3552C65081C0097A94B /* Sort */ = {
+			isa = PBXGroup;
+			children = (
+				114FAA092C51720C002B688A /* SortViewController.swift */,
+			);
+			path = Sort;
+			sourceTree = "<group>";
+		};
+		11B2A3572C6508370097A94B /* Feed */ = {
+			isa = PBXGroup;
+			children = (
+				114FAA052C5171F6002B688A /* FeedViewController.swift */,
+				114FAA0B2C517221002B688A /* ShowDetailsViewController.swift */,
+				114FAA0D2C517234002B688A /* ShowPictureViewController.swift */,
+				11B2A3542C6508080097A94B /* Filter */,
+				11B2A3552C65081C0097A94B /* Sort */,
+			);
+			path = Feed;
+			sourceTree = "<group>";
+		};
+		11B2A3582C65084A0097A94B /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				114FAA012C5171CC002B688A /* LoginViewController.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		11B2A3592C6508540097A94B /* Add Product */ = {
+			isa = PBXGroup;
+			children = (
+				114FAA0F2C51725A002B688A /* AddProductViewController.swift */,
+				114FAA112C517271002B688A /* AddContentViewController.swift */,
+			);
+			path = "Add Product";
+			sourceTree = "<group>";
+		};
+		11B2A35A2C6508680097A94B /* Update */ = {
+			isa = PBXGroup;
+			children = (
+				114FAA132C51727F002B688A /* UpdateViewController.swift */,
+				114FAA152C51728E002B688A /* ShowUpdateableDetailsViewController.swift */,
+				114FAA172C51729F002B688A /* UpdateContentViewController.swift */,
+			);
+			path = Update;
+			sourceTree = "<group>";
+		};
+		11B2A35B2C65087E0097A94B /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				114FAA192C5172B3002B688A /* SettingsViewController.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		3898507BD1BCB16ACD5B8F72 /* Pods */ = {

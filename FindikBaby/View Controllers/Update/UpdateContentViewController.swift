@@ -50,6 +50,8 @@ class UpdateContentViewController: UIViewController, UITextFieldDelegate {
         textField.textColor = UIColor(red: 0.25, green: 0.25, blue: 0.25, alpha: 1.0)
         textField.layer.borderColor = UIColor.systemGray.withAlphaComponent(1.0).cgColor
         textField.textAlignment = .center
+        textField.autocapitalizationType = .allCharacters
+
         return textField
     }()
     

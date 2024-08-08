@@ -20,7 +20,7 @@ class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDa
         return tableView
     }()
     
-    let filterOptions = DataManager.elements
+    let filterOptions = DataManager.elements.filter { $0 != "Kod" }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -171,7 +171,7 @@ class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDa
             presentFilteringOptions(withPhotoOptions: true, pickerViewOptions: false, textFieldsOptions: false, keywordTextFieldOptions: false)
         case "Tarih", "Fasona Gidiş Tarihi", "Fasondan Geliş Tarihi":
             presentFilteringOptions(withPhotoOptions: false, pickerViewOptions: true, textFieldsOptions: false, keywordTextFieldOptions: false)
-        case "Evrak No", "Kod", "Adet", "Operasyon", "Fason Fiyat", "Fasondan Gelen Adet", "Çıtçıt Gelen Adet", "Çıtçıt Sayısı", "Çıtçıt Tutar", "Ütü Fiyat", "Ütü Gelen Adet", "Defolu", "Parti Devam", "Eksik":
+        case "Evrak No", "Adet", "Operasyon", "Fason Fiyat", "Fasondan Gelen Adet", "Çıtçıt Gelen Adet", "Çıtçıt Sayısı", "Çıtçıt Tutar", "Ütü Fiyat", "Ütü Gelen Adet", "Defolu", "Parti Devam", "Eksik":
             presentFilteringOptions(withPhotoOptions: false, pickerViewOptions: false, textFieldsOptions: true, keywordTextFieldOptions: false)
         case "Açıklama", "Aksesuar", "Baskı", "Ense Baskı", "Fason Dikiş", "Çıtçıt", "Ütü", "Model Açıklama":
             presentFilteringOptions(withPhotoOptions: false, pickerViewOptions: false, textFieldsOptions: false, keywordTextFieldOptions: true)

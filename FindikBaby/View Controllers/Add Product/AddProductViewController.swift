@@ -77,10 +77,25 @@ class AddProductViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-            let clearButton = UIBarButtonItem(title: "Temizle", style: .plain, target: self, action: #selector(clearButtonAction))
+            let clearButton = UIBarButtonItem(title: "Temizle", style: .plain, target: self, action: #selector(confirmClearAction))
             navigationItem.rightBarButtonItem = clearButton
         }
         
+    @objc private func confirmClearAction() {
+        let alertController = UIAlertController(title: "Bilgileri Temizle", message: "Girdiğiniz tüm bilgiler silinecek, onaylıyor musunuz?", preferredStyle: .alert)
+
+        let yesAction = UIAlertAction(title: "Evet", style: .destructive) { _ in
+            self.clearButtonAction()
+        }
+
+        let noAction = UIAlertAction(title: "Hayır", style: .default, handler: nil)
+
+        alertController.addAction(yesAction)
+        alertController.addAction(noAction)
+
+        present(alertController, animated: true, completion: nil)
+    }
+    
     @objc private func clearButtonAction() {
         DataManager.productData.removeAll()
         for key in DataManager.checkmarkStates.keys {

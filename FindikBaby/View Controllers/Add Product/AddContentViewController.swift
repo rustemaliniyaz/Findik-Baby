@@ -27,7 +27,6 @@ class AddContentViewController: UIViewController, UITextFieldDelegate {
     
     private let textField: UITextField = {
         let textField = UITextField()
-        
         textField.backgroundColor = .systemGray6
         textField.attributedPlaceholder = NSAttributedString(string: "Güncelleme giriniz", attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray])
         textField.layer.cornerRadius = 8
@@ -35,7 +34,7 @@ class AddContentViewController: UIViewController, UITextFieldDelegate {
         textField.layer.borderWidth = 1.0
         textField.layer.borderColor = UIColor.systemGray.withAlphaComponent(1.0).cgColor
         textField.textColor = UIColor(red: 0.25, green: 0.25, blue: 0.25, alpha: 1.0)
-        
+        textField.autocapitalizationType = .allCharacters
         textField.textAlignment = .center
         return textField
     }()

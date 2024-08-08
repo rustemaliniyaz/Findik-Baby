@@ -41,6 +41,7 @@ class FilteringOptionsViewController: UIViewController {
         let textField = UITextField()
         textField.placeholder = "Aranacak bir kelime giriniz"
         textField.borderStyle = .roundedRect
+        textField.autocapitalizationType = .allCharacters
         textField.textColor = UIColor(red: 0.25, green: 0.25, blue: 0.25, alpha: 1.0)
         return textField
     }()
